@@ -18,7 +18,7 @@ export default function Sidebar({ onSelectType }) {
           <Button
             key={item.type}
             variant="ghost"
-            className="w-full justify-start"
+            className="w-full justify-start cursor-pointer"
             onClick={() => onSelectType(item.type)}
           >
             {item.name}
