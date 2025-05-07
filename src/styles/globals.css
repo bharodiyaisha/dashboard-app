@@ -5,6 +5,7 @@
 
 body {
   background-color: white !important;
+  height: 100%;
 }
 
 :root {

@@ -47,7 +47,11 @@ export default function Dashboard() {
             />
             <div className="flex items-center gap-2">
               <span className="text-sm font-medium">Filter:</span>
-              <Select onValueChange={setSelectedType} defaultValue="all">
+              <Select
+                onValueChange={setSelectedType}
+                defaultValue="all"
+                value={selectedType}
+              >
                 <SelectTrigger className="w-[150px]">
                   <SelectValue placeholder="All Types" />
                 </SelectTrigger>
