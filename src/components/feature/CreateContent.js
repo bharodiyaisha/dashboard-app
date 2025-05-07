@@ -51,7 +51,6 @@ export default function CreateContent({ setShowForm, selectedContent }) {
     setShowForm(false);
   };
 
-  
   return (
     <div className="min-h-screen p-6 w-full">
       <div className="bg-white p-6">
@@ -70,7 +69,7 @@ export default function CreateContent({ setShowForm, selectedContent }) {
               className="bg-white hover:bg-gray-100 text-black cursor-pointer"
               variant="outline"
             >
-              Save New Content
+              {selectedContent ? "Update Content" : "Save New Content"}
             </Button>
           </div>
         </div>

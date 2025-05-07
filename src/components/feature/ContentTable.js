@@ -115,7 +115,7 @@ export default function ContentTable({
                     <Button
                       size="sm"
                       variant="outline"
-                      className="bg-white hover:bg-gray-100 text-black"
+                      className="bg-white hover:bg-gray-100 text-black cursor-pointer"
                       onClick={() => {
                         setSelectedContent(item);
                         setShowForm(true);
@@ -126,7 +126,7 @@ export default function ContentTable({
                     <Button
                       size="sm"
                       variant="outline"
-                      className="bg-white hover:bg-gray-100 text-black"
+                      className="bg-white hover:bg-gray-100 text-black cursor-pointer"
                       onClick={() => alert(`Title: ${item.title}`)}
                     >
                       Preview
