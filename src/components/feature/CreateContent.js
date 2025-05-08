@@ -38,6 +38,7 @@ export default function CreateContent({ setShowForm, selectedContent }) {
     const date = new Date();
     const data = {
       ...formData,
+      id: crypto.randomUUID(),
       accessTier: "free",
       createdAt: date.toLocaleDateString("en-US"),
     };

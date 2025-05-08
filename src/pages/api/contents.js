@@ -39,17 +39,12 @@ export default function handler(req, res) {
   if (req.method === "DELETE") {
     try {
       const { ids } = req.body;
+
       if (!Array.isArray(ids)) {
         return res.status(400).json({ message: "Invalid IDs format" });
       }
 
-      ids
-        .sort((a, b) => b - a)
-        .forEach((index) => {
-          if (index >= 0 && index < contents.length) {
-            contents.splice(index, 1);
-          }
-        });
+      contents = contents.filter((item) => !ids.includes(item.id));
 
       return res.status(200).json({ success: true, message: "Items deleted" });
     } catch (error) {

@@ -18,52 +18,49 @@ export default function ContentTable({
   setShowForm,
   setData,
 }) {
-  const [selectedIndexes, setSelectedIndexes] = useState([]);
+  const [selectedContentIds, setSelectedContentIds] = useState([]);
 
   const toggleSelectAll = () => {
-    setSelectedIndexes((prev) =>
-      prev.length === data.length ? [] : data.map((_, i) => i)
+    setSelectedContentIds((prev) =>
+      prev.length === data.length ? [] : data.map((item) => item.id)
     );
   };
 
-  const toggleSelectOne = (index) => {
-    setSelectedIndexes((prev) =>
-      prev.includes(index)
-        ? prev.filter((i) => i !== index)
-        : [...prev, index]
+  const toggleSelectOne = (id) => {
+    setSelectedContentIds((prev) =>
+      prev.includes(id) ? prev.filter((i) => i !== id) : [...prev, id]
     );
   };
 
-  const isSelected = (index) => selectedIndexes.includes(index);
-  const isAllSelected = data.length > 0 && selectedIndexes.length === data.length;
+  const isSelected = (id) => selectedContentIds.includes(id);
+  const isAllSelected =
+    data.length > 0 && selectedContentIds.length === data.length;
 
   const refreshData = async () => {
     const refreshed = await fetchContents();
     setData(refreshed);
-    setSelectedIndexes([]);
+    setSelectedContentIds([]);
   };
-  
+
   const handlePublish = async () => {
-    const updates = selectedIndexes.map((i) => ({
-      ...data[i],
-      status: "published",
-    }));
-  
+    const updates = data
+      .filter((item) => selectedContentIds.includes(item.id))
+      .map((item) => ({ ...item, status: "published" }));
+
     await Promise.all(updates.map(updateContent));
     await refreshData();
   };
-  
+
   const handleDelete = async () => {
-    await deleteContents(selectedIndexes);
+    await deleteContents(selectedContentIds); // ids instead of indexes
     await refreshData();
   };
-  
 
   return (
     <>
-      {selectedIndexes.length > 0 && (
+      {selectedContentIds.length > 0 && (
         <ActionBar
-          selectedCount={selectedIndexes.length}
+          selectedCount={selectedContentIds.length}
           onDelete={handleDelete}
           onPublish={handlePublish}
         />
@@ -79,25 +76,30 @@ export default function ContentTable({
                   className="cursor-pointer"
                 />
               </TableHead>
-              {["Title", "Content Type", "Status", "Access Tier", "Created At", "Actions"].map(
-                (text) => (
-                  <TableHead
-                    key={text}
-                    className="font-semibold text-black border-x"
-                  >
-                    {text}
-                  </TableHead>
-                )
-              )}
+              {[
+                "Title",
+                "Content Type",
+                "Status",
+                "Access Tier",
+                "Created At",
+                "Actions",
+              ].map((text) => (
+                <TableHead
+                  key={text}
+                  className="font-semibold text-black border-x"
+                >
+                  {text}
+                </TableHead>
+              ))}
             </TableRow>
           </TableHeader>
           <TableBody>
-            {data.map((item, i) => (
-              <TableRow key={i} className="hover:bg-gray-50">
+            {data.map((item) => (
+              <TableRow key={item.id} className="hover:bg-gray-50">
                 <TableCell className="border-x">
                   <Checkbox
-                    checked={isSelected(i)}
-                    onCheckedChange={() => toggleSelectOne(i)}
+                    checked={isSelected(item.id)}
+                    onCheckedChange={() => toggleSelectOne(item.id)}
                     className="cursor-pointer"
                   />
                 </TableCell>
