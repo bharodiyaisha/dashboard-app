@@ -1,3 +1,4 @@
+import { Button } from "@/components/ui/button";
 import {
   Table,
   TableBody,
@@ -6,11 +7,11 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { Button } from "@/components/ui/button";
-import { Checkbox } from "../ui/checkbox";
-import { useState } from "react";
-import ActionBar from "./ActionBar";
 import { deleteContents, fetchContents, updateContent } from "@/utils/api";
+import { Loader2 } from "lucide-react";
+import { useState } from "react";
+import { Checkbox } from "../ui/checkbox";
+import ActionBar from "./ActionBar";
 
 export default function ContentTable({
   data,
@@ -19,6 +20,7 @@ export default function ContentTable({
   setData,
 }) {
   const [selectedContentIds, setSelectedContentIds] = useState([]);
+  const [loadingAction, setLoadingAction] = useState(null);
 
   const toggleSelectAll = () => {
     setSelectedContentIds((prev) =>
@@ -42,18 +44,26 @@ export default function ContentTable({
     setSelectedContentIds([]);
   };
 
+  const handleDelete = async () => {
+    setLoadingAction("delete");
+    await deleteContents(selectedContentIds);
+    await refreshData();
+    setTimeout(() => {
+      setLoadingAction(null);
+    }, 100);
+  };
+
   const handlePublish = async () => {
+    setLoadingAction("publish");
     const updates = data
       .filter((item) => selectedContentIds.includes(item.id))
       .map((item) => ({ ...item, status: "published" }));
 
     await Promise.all(updates.map(updateContent));
     await refreshData();
-  };
-
-  const handleDelete = async () => {
-    await deleteContents(selectedContentIds); // ids instead of indexes
-    await refreshData();
+    setTimeout(() => {
+      setLoadingAction(null);
+    }, 100);
   };
 
   return (
@@ -66,6 +76,11 @@ export default function ContentTable({
         />
       )}
       <div className="overflow-x-auto border rounded-md">
+        {loadingAction && (
+          <div className="absolute inset-0 flex items-center justify-center bg-white/60 z-50 rounded-md">
+            <Loader2 className="w-6 h-6 animate-spin text-indigo-600" />
+          </div>
+        )}
         <Table>
           <TableHeader className="bg-gray-100">
             <TableRow className="border-b border-gray-300">
