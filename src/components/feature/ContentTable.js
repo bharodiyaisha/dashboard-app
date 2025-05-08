@@ -77,7 +77,7 @@ export default function ContentTable({
       )}
       <div className="overflow-x-auto border rounded-md">
         {loadingAction && (
-          <div className="absolute inset-0 flex items-center justify-center bg-white/60 z-50 rounded-md">
+          <div className="fixed inset-0 flex items-center justify-center bg-white/60 z-50">
             <Loader2 className="w-6 h-6 animate-spin text-indigo-600" />
           </div>
         )}
